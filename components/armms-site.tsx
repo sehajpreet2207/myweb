@@ -245,7 +245,10 @@ function MovingRadarLogo() {
         {/* Opaque backing to hide radar elements behind logos */}
         <div className="absolute w-[78%] h-[78%] rounded-full bg-[var(--paper)] z-[8]" />
         {/* Shared logo background ring */}
-        <div className={`absolute radar-logo-ring animate-spin [animation-duration:30s] z-[9] ${rotationDirection === 'anticlockwise' ? '[animation-direction:reverse]' : ''}`} />
+        <div
+          className="absolute radar-logo-ring animate-spin [animation-duration:30s] z-[9]"
+          style={{ animationDirection: rotationDirection === 'anticlockwise' ? 'reverse' : 'normal' }}
+        />
         {/* ARMSS Logo */}
         <img
           src="/armss-emblem.png"
