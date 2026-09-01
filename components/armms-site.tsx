@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ArrowUpRight,
   BrainCircuit,
@@ -212,6 +212,7 @@ function MovingRadarLogo() {
   const [showGndu, setShowGndu] = useState(false)
   const [rotationDirection, setRotationDirection] = useState<'clockwise' | 'anticlockwise'>('clockwise')
   const [transitioning, setTransitioning] = useState(false)
+  const ringRef = useRef<HTMLDivElement>(null)
   
   useEffect(() => {
     const interval = setInterval(() => {
@@ -225,7 +226,30 @@ function MovingRadarLogo() {
         setTimeout(() => setTransitioning(false), 600)
       }, 400)
     }, 4000)
-    return () => clearInterval(interval)
+    let animationFrame = 0
+    let previousAngle: number | null = null
+    const trackRotation = () => {
+      const transform = ringRef.current ? getComputedStyle(ringRef.current).transform : 'none'
+      if (transform !== 'none') {
+        const values = transform.match(/matrix\(([^)]+)\)/)?.[1].split(',').map(Number)
+        if (values && values.length >= 2) {
+          const angle = Math.atan2(values[1], values[0])
+          if (previousAngle !== null) {
+            let delta = angle - previousAngle
+            if (delta > Math.PI) delta -= Math.PI * 2
+            if (delta < -Math.PI) delta += Math.PI * 2
+            if (Math.abs(delta) > 0.00001) setShowGndu(delta < 0)
+          }
+          previousAngle = angle
+        }
+      }
+      animationFrame = requestAnimationFrame(trackRotation)
+    }
+    animationFrame = requestAnimationFrame(trackRotation)
+    return () => {
+      clearInterval(interval)
+      cancelAnimationFrame(animationFrame)
+    }
   }, [])
 
   return (
@@ -246,6 +270,7 @@ function MovingRadarLogo() {
         <div className="absolute w-[78%] h-[78%] rounded-full bg-[var(--paper)] z-[8]" />
         {/* Shared logo background ring */}
         <div
+          ref={ringRef}
           className="absolute radar-logo-ring animate-spin [animation-duration:30s] z-[9]"
           style={{ animationDirection: rotationDirection === 'anticlockwise' ? 'reverse' : 'normal' }}
         />
