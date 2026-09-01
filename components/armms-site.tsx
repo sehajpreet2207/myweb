@@ -510,13 +510,13 @@ export function Domains() {
                 <span className="tech-corner-plus tech-corner-tr text-white/50">+</span>
                 <div className="flex items-start justify-between">
                   <span className="font-mono text-xs text-white font-bold bg-navy/30 px-2 py-0.5 rounded">{d.n}</span>
-                  <Icon className="domain-icon" size={27} strokeWidth={1.5} />
+                  <Icon className="domain-icon" size={22} strokeWidth={1.5} />
                 </div>
                 <h3>{d.title}</h3>
                 <p>{d.text}</p>
-                <div className="mt-6 flex flex-wrap gap-1.5">
+                <div className="mt-4 flex flex-wrap gap-1">
                   {d.tech.map((t) => (
-                    <span key={t} className="font-mono text-[10px] bg-white/20 text-white px-2 py-0.5 rounded font-bold">
+                    <span key={t} className="font-mono text-[10px] bg-white/20 text-white px-1.5 py-0.5 rounded font-bold">
                       {t}
                     </span>
                   ))}
