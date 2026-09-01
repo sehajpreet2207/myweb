@@ -210,13 +210,18 @@ export function Navbar() {
 
 function MovingRadarLogo() {
   const [showGndu, setShowGndu] = useState(false)
+  const [rotationDirection, setRotationDirection] = useState<'clockwise' | 'anticlockwise'>('clockwise')
   const [transitioning, setTransitioning] = useState(false)
-
+  
   useEffect(() => {
     const interval = setInterval(() => {
       setTransitioning(true)
       setTimeout(() => {
-        setShowGndu((prev) => !prev)
+        setRotationDirection((previousDirection) => {
+          const nextDirection = previousDirection === 'clockwise' ? 'anticlockwise' : 'clockwise'
+          setShowGndu(nextDirection === 'anticlockwise')
+          return nextDirection
+        })
         setTimeout(() => setTransitioning(false), 600)
       }, 400)
     }, 4000)
@@ -240,7 +245,7 @@ function MovingRadarLogo() {
         {/* Opaque backing to hide radar elements behind logos */}
         <div className="absolute w-[78%] h-[78%] rounded-full bg-[var(--paper)] z-[8]" />
         {/* Shared logo background ring */}
-        <div className="absolute radar-logo-ring animate-spin [animation-duration:30s] z-[9]" />
+        <div className={`absolute radar-logo-ring animate-spin [animation-duration:30s] z-[9] ${rotationDirection === 'anticlockwise' ? '[animation-direction:reverse]' : ''}`} />
         {/* ARMSS Logo */}
         <img
           src="/armss-emblem.png"
